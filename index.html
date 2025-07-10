@@ -1,0 +1,2214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elmet Risk Analysis - Interactive Presentation</title>
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background: #0a0a0a;
+color: #fff;
+overflow: hidden;
+height: 100vh;
+}
+
+.presentation-container {
+width: 100%;
+height: 100vh;
+display: flex;
+flex-direction: column;
+}
+
+.slides-wrapper {
+flex: 1;
+position: relative;
+overflow: hidden;
+background: #0a0a0a;
+}
+
+.slide {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+padding: 50px;
+background: linear-gradient(135deg, #1a0f1f 0%, #2d1b3d 50%, #0f1720 100%);
+overflow-y: auto;
+display: none;
+}
+
+.slide.active {
+display: block;
+}
+
+.slide h1 {
+font-size: 54px;
+margin-bottom: 30px;
+text-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+background: linear-gradient(45deg, #ff4444, #ff8888);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+
+.slide h2 {
+font-size: 36px;
+margin-bottom: 20px;
+color: #ffd700;
+text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+}
+
+.slide h3 {
+font-size: 26px;
+margin: 20px 0 15px 0;
+color: #00ff88;
+}
+
+.risk-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+gap: 25px;
+margin-top: 30px;
+}
+
+.risk-card {
+background: rgba(255, 255, 255, 0.03);
+border: 2px solid rgba(255, 255, 255, 0.1);
+border-radius: 20px;
+padding: 25px;
+backdrop-filter: blur(10px);
+transition: all 0.4s ease;
+position: relative;
+overflow: hidden;
+}
+
+.risk-card::before {
+content: '';
+position: absolute;
+top: -2px;
+left: -2px;
+right: -2px;
+bottom: -2px;
+background: linear-gradient(45deg, #ff4444, #ff8888, #ffd700, #ff4444);
+border-radius: 20px;
+opacity: 0;
+z-index: -1;
+transition: opacity 0.4s ease;
+}
+
+.risk-card:hover::before {
+opacity: 0.3;
+}
+
+.risk-card:hover {
+transform: translateY(-5px) scale(1.02);
+background: rgba(255, 255, 255, 0.06);
+box-shadow: 0 10px 40px rgba(255, 68, 68, 0.3);
+}
+
+.critical-risk {
+border-color: rgba(255, 68, 68, 0.5);
+background: rgba(255, 68, 68, 0.05);
+}
+
+.high-risk {
+border-color: rgba(255, 165, 0, 0.5);
+background: rgba(255, 165, 0, 0.05);
+}
+
+.medium-risk {
+border-color: rgba(255, 215, 0, 0.5);
+background: rgba(255, 215, 0, 0.05);
+}
+
+.risk-score {
+display: inline-block;
+background: linear-gradient(45deg, #ff4444, #ff6666);
+color: white;
+padding: 8px 20px;
+border-radius: 25px;
+font-size: 18px;
+font-weight: bold;
+margin-bottom: 15px;
+box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);
+}
+
+.risk-metrics {
+display: flex;
+gap: 15px;
+margin: 15px 0;
+}
+
+.metric {
+background: rgba(0, 0, 0, 0.5);
+padding: 10px 15px;
+border-radius: 10px;
+border: 1px solid rgba(255, 255, 255, 0.2);
+flex: 1;
+text-align: center;
+}
+
+.metric-label {
+font-size: 12px;
+color: #888;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+
+.metric-value {
+font-size: 24px;
+font-weight: bold;
+color: #ffd700;
+margin-top: 5px;
+}
+
+.risk-list {
+list-style: none;
+margin-top: 15px;
+}
+
+.risk-list li {
+padding: 10px 0;
+padding-left: 30px;
+position: relative;
+font-size: 16px;
+line-height: 1.6;
+color: #e0e0e0;
+}
+
+.risk-list li:before {
+content: "⚠";
+position: absolute;
+left: 0;
+color: #ff4444;
+font-size: 16px;
+}
+
+.strategy-section {
+margin-top: 20px;
+padding: 20px;
+background: rgba(0, 0, 0, 0.3);
+border-radius: 15px;
+border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.strategy-type {
+font-weight: bold;
+color: #00ff88;
+margin-bottom: 10px;
+text-transform: uppercase;
+letter-spacing: 1px;
+font-size: 14px;
+}
+
+.navigation {
+height: 80px;
+background: rgba(0, 0, 0, 0.95);
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 0 40px;
+border-top: 2px solid #333;
+backdrop-filter: blur(10px);
+}
+
+.nav-button {
+background: linear-gradient(45deg, #2d1b3d, #1a0f1f);
+color: white;
+border: 2px solid #ff4444;
+padding: 12px 35px;
+border-radius: 30px;
+font-size: 16px;
+cursor: pointer;
+transition: all 0.3s ease;
+text-transform: uppercase;
+letter-spacing: 1px;
+font-weight: 600;
+}
+
+.nav-button:hover:not(:disabled) {
+background: linear-gradient(45deg, #ff4444, #ff6666);
+transform: scale(1.05);
+box-shadow: 0 5px 20px rgba(255, 68, 68, 0.5);
+}
+
+.nav-button:disabled {
+background: #333;
+border-color: #555;
+cursor: not-allowed;
+opacity: 0.5;
+}
+
+.slide-indicator {
+display: flex;
+gap: 12px;
+}
+
+.dot {
+width: 14px;
+height: 14px;
+border-radius: 50%;
+background: #555;
+cursor: pointer;
+transition: all 0.3s ease;
+border: 2px solid transparent;
+}
+
+.dot.active {
+background: #ff4444;
+transform: scale(1.4);
+border-color: #ff6666;
+box-shadow: 0 0 10px rgba(255, 68, 68, 0.6);
+}
+
+.title-slide {
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+background: radial-gradient(ellipse at center, rgba(255, 68, 68, 0.1) 0%, #0a0a0a 100%);
+}
+
+.title-slide h1 {
+font-size: 72px;
+margin-bottom: 30px;
+animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+0%, 100% { transform: scale(1); }
+50% { transform: scale(1.05); }
+}
+
+.title-slide .subtitle {
+font-size: 28px;
+color: #ffd700;
+margin-bottom: 50px;
+text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.overview-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 30px;
+margin-top: 50px;
+max-width: 900px;
+}
+
+.overview-card {
+background: rgba(255, 255, 255, 0.05);
+border: 2px solid rgba(255, 68, 68, 0.3);
+border-radius: 20px;
+padding: 30px;
+text-align: center;
+transition: all 0.4s ease;
+}
+
+.overview-card:hover {
+background: rgba(255, 255, 255, 0.1);
+transform: translateY(-10px) scale(1.05);
+border-color: rgba(255, 68, 68, 0.6);
+box-shadow: 0 15px 35px rgba(255, 68, 68, 0.3);
+}
+
+.overview-card h3 {
+font-size: 22px;
+margin-bottom: 15px;
+color: #ff6666;
+}
+
+.overview-card .count {
+font-size: 48px;
+font-weight: bold;
+color: #ffd700;
+text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+.risk-matrix {
+display: grid;
+grid-template-columns: repeat(6, 1fr);
+grid-template-rows: repeat(6, 1fr);
+gap: 5px;
+max-width: 600px;
+margin: 30px auto;
+aspect-ratio: 1;
+background: rgba(0, 0, 0, 0.5);
+padding: 20px;
+border-radius: 15px;
+}
+
+.matrix-cell {
+background: rgba(255, 255, 255, 0.05);
+border: 1px solid rgba(255, 255, 255, 0.1);
+border-radius: 8px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 14px;
+transition: all 0.3s ease;
+}
+
+.matrix-cell.low {
+background: rgba(0, 255, 0, 0.2);
+}
+
+.matrix-cell.medium {
+background: rgba(255, 215, 0, 0.2);
+}
+
+.matrix-cell.high {
+background: rgba(255, 165, 0, 0.2);
+}
+
+.matrix-cell.critical {
+background: rgba(255, 68, 68, 0.3);
+animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+0%, 100% { box-shadow: 0 0 5px rgba(255, 68, 68, 0.5); }
+50% { box-shadow: 0 0 20px rgba(255, 68, 68, 0.8); }
+}
+
+.split-view {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 40px;
+margin-top: 30px;
+height: calc(100vh - 300px);
+}
+
+.split-section {
+overflow-y: auto;
+padding-right: 20px;
+}
+
+.split-section h2 {
+position: sticky;
+top: 0;
+background: rgba(0, 0, 0, 0.9);
+padding: 15px 0;
+margin-bottom: 25px;
+z-index: 10;
+backdrop-filter: blur(10px);
+}
+
+.progress-bar {
+width: 100%;
+height: 20px;
+background: rgba(0, 0, 0, 0.5);
+border-radius: 10px;
+overflow: hidden;
+margin-top: 10px;
+}
+
+.progress-fill {
+height: 100%;
+background: linear-gradient(90deg, #ff4444, #ff8888);
+transition: width 0.6s ease;
+}
+
+@media (max-width: 768px) {
+.slide {
+padding: 30px;
+}
+
+.slide h1 {
+font-size: 36px;
+}
+
+.risk-grid {
+grid-template-columns: 1fr;
+}
+
+.overview-grid {
+grid-template-columns: 1fr;
+}
+
+.split-view {
+grid-template-columns: 1fr;
+}
+}
+</style>
+</head>
+<body>
+<div class="presentation-container">
+<div class="slides-wrapper" id="slidesWrapper">
+<!-- Title Slide -->
+<div class="slide active title-slide" data-slide="0">
+<h1>⚠️ Risk Analysis</h1>
+<p class="subtitle">Comprehensive Risk Assessment & Mitigation Strategies</p>
+<div class="overview-grid">
+<div class="overview-card">
+<h3>Total Risks</h3>
+<div class="count">47</div>
+<p>Identified risks</p>
+</div>
+<div class="overview-card">
+<h3>Risk Categories</h3>
+<div class="count">10</div>
+<p>Thematic groups</p>
+</div>
+<div class="overview-card">
+<h3>Critical Risks</h3>
+<div class="count">10</div>
+<p>Score ≥ 20</p>
+</div>
+</div>
+</div>
+
+<!-- Risk Matrix Overview -->
+<div class="slide" data-slide="1">
+<h1>Risk Assessment Matrix</h1>
+<p style="text-align: center; font-size: 20px; margin-bottom: 30px;">
+Risk Score = Probability × Impact (Max: 36)
+</p>
+<div style="display: flex; justify-content: space-around; align-items: center;">
+<div>
+<h3>Risk Categories by Score</h3>
+<div class="risk-card" style="margin: 10px 0;">
+<span class="risk-score">18.8</span>
+<h4>Strategic & Growth</h4>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Probability</div>
+<div class="metric-value">4.3/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">4.3/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card" style="margin: 10px 0;">
+<span class="risk-score">17.8</span>
+<h4>Talent & Workforce</h4>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Probability</div>
+<div class="metric-value">3.3/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">5.3/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card" style="margin: 10px 0;">
+<span class="risk-score">17.1</span>
+<h4>Market & Customer</h4>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Probability</div>
+<div class="metric-value">3.5/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">4.9/6</div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h3>Risk Distribution</h3>
+<div style="background: rgba(0,0,0,0.5); padding: 30px; border-radius: 15px;">
+<div style="margin: 20px 0;">
+<h4 style="color: #ff4444;">Critical (≥20): 10 risks</h4>
+<div class="progress-bar">
+<div class="progress-fill" style="width: 21%; background: #ff4444;"></div>
+</div>
+</div>
+<div style="margin: 20px 0;">
+<h4 style="color: #ffa500;">High (15-19): 14 risks</h4>
+<div class="progress-bar">
+<div class="progress-fill" style="width: 30%; background: #ffa500;"></div>
+</div>
+</div>
+<div style="margin: 20px 0;">
+<h4 style="color: #ffd700;">Medium (10-14): 15 risks</h4>
+<div class="progress-bar">
+<div class="progress-fill" style="width: 32%; background: #ffd700;"></div>
+</div>
+</div>
+<div style="margin: 20px 0;">
+<h4 style="color: #00ff88;">Low (<10): 8 risks</h4>
+<div class="progress-bar">
+<div class="progress-fill" style="width: 17%; background: #00ff88;"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Strategic & Growth Risks -->
+<div class="slide" data-slide="2">
+<h1>Strategic & Growth Risks</h1>
+<span class="risk-score">Risk Score: 18.8 (HIGHEST)</span>
+<div class="split-view">
+<div class="split-section">
+<h2>Risk Assessment</h2>
+<div class="risk-card critical-risk">
+<h3>Key Risks</h3>
+<ul class="risk-list">
+<li>Continued erosion of sales vs growth targets</li>
+<li>Business stagnation - wins/losses netting out</li>
+<li>Strategic misalignment across organization</li>
+</ul>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Probability</div>
+<div class="metric-value">4.3/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">4.3/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Risks</div>
+<div class="metric-value">3</div>
+</div>
+</div>
+</div>
+<div class="risk-card">
+<h3>Organizations Affected</h3>
+<p style="color: #ff6666; font-weight: bold;">All divisions - potential downsizing and underinvestment</p>
+</div>
+</div>
+<div class="split-section">
+<h2>Mitigation Strategies</h2>
+<div class="strategy-section">
+<div class="strategy-type">🛡️ ELIMINATE</div>
+<ul class="risk-list">
+<li>Develop clear growth strategy with measurable targets</li>
+<li>Align all divisions on strategic priorities</li>
+<li>Create unified vision and execution plan</li>
+</ul>
+</div>
+<div class="strategy-section">
+<div class="strategy-type">⚡ MITIGATE</div>
+<ul class="risk-list">
+<li>Regular strategic reviews and adjustments</li>
+<li>Market opportunity assessments</li>
+<li>Investment in high-growth areas</li>
+</ul>
+</div>
+<div class="strategy-section">
+<div class="strategy-type">🚨 RESCUE</div>
+<ul class="risk-list">
+<li>Emergency restructuring plans</li>
+<li>Rapid pivot capabilities</li>
+<li>Strategic partnership options</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Talent & Workforce Risks -->
+<div class="slide" data-slide="3">
+<h1>Talent & Workforce Risks</h1>
+<span class="risk-score">Risk Score: 17.8</span>
+<div class="split-view">
+<div class="split-section">
+<h2>Risk Assessment</h2>
+<div class="risk-card critical-risk">
+<h3>Key Risks</h3>
+<ul class="risk-list">
+<li>Labor shortage for skilled positions</li>
+<li>Low retention due to lack of talent development</li>
+<li>Skills gap in critical production areas</li>
+</ul>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Probability</div>
+<div class="metric-value">3.3/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">5.3/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Risks</div>
+<div class="metric-value">3</div>
+</div>
+</div>
+</div>
+<div class="risk-card">
+<h3>Critical Areas</h3>
+<p>Production departments, especially:</p>
+<ul class="risk-list">
+<li>CNC machining centers</li>
+<li>Special equipment operation</li>
+<li>Programming expertise</li>
+</ul>
+</div>
+</div>
+<div class="split-section">
+<h2>Mitigation Strategies</h2>
+<div class="strategy-section">
+<div class="strategy-type">🛡️ ELIMINATE</div>
+<ul class="risk-list">
+<li>Comprehensive talent development programs</li>
+<li>Competitive compensation packages</li>
+<li>Career progression pathways</li>
+</ul>
+</div>
+<div class="strategy-section">
+<div class="strategy-type">⚡ MITIGATE</div>
+<ul class="risk-list">
+<li>Cross-training initiatives</li>
+<li>University partnerships</li>
+<li>Apprenticeship programs</li>
+</ul>
+</div>
+<div class="strategy-section">
+<div class="strategy-type">🚨 RESCUE</div>
+<ul class="risk-list">
+<li>Emergency contractor arrangements</li>
+<li>Overtime programs</li>
+<li>Temporary skill importation</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Market & Customer Risks -->
+<div class="slide" data-slide="4">
+<h1>Market & Customer Risks</h1>
+<span class="risk-score">Risk Score: 17.1</span>
+<div class="risk-grid">
+<div class="risk-card high-risk">
+<h3>Primary Risks (8 total)</h3>
+<ul class="risk-list">
+<li>Quality misalignment with market expectations</li>
+<li>Continued emergence of low-cost competition</li>
+<li>Loss of existing business faster than new acquisition</li>
+<li>Competitive disadvantages (cost, lead time, quality)</li>
+</ul>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Probability</div>
+<div class="metric-value">3.5/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">4.9/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card">
+<h3>Affected Areas</h3>
+<p>Sales, Operations, Finance - particularly:</p>
+<ul class="risk-list">
+<li>Lewiston facility (high vulnerability)</li>
+<li>Euclid operations</li>
+<li>Fixed cost impacts to margins</li>
+</ul>
+</div>
+<div class="risk-card">
+<h3>Elimination Strategies</h3>
+<ul class="risk-list">
+<li>Quality improvement initiatives</li>
+<li>Cost reduction programs</li>
+<li>Market differentiation strategy</li>
+<li>Value engineering projects</li>
+</ul>
+</div>
+<div class="risk-card">
+<h3>Mitigation Strategies</h3>
+<ul class="risk-list">
+<li>Customer feedback loops</li>
+<li>Competitive analysis programs</li>
+<li>Agile market response</li>
+<li>Pricing optimization</li>
+</ul>
+</div>
+</div>
+</div>
+
+<!-- Technology & Systems Risks -->
+<div class="slide" data-slide="5">
+<h1>Technology & Systems Risks</h1>
+<span class="risk-score">Risk Score: 16.8 | 17 Risks Identified</span>
+<div class="risk-grid">
+<div class="risk-card high-risk">
+<h3>Critical Technology Risks</h3>
+<ul class="risk-list">
+<li>Cybersecurity vulnerabilities</li>
+<li>Legacy system failures</li>
+<li>Technology adoption lag</li>
+<li>Data integrity issues</li>
+</ul>
+<p style="margin-top: 15px; color: #ff6666;">
+<strong>Most Vulnerable:</strong> Euclid facility
+</p>
+</div>
+<div class="risk-card">
+<h3>Risk Impact Analysis</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Probability</div>
+<div class="metric-value">3.4/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">5.0/6</div>
+</div>
+</div>
+<p style="margin-top: 15px;">Potential to disable most business operations</p>
+</div>
+<div class="strategy-section">
+<div class="strategy-type">🛡️ ELIMINATE</div>
+<ul class="risk-list">
+<li>Comprehensive IT modernization</li>
+<li>Cybersecurity infrastructure upgrades</li>
+<li>Legacy system replacement</li>
+</ul>
+</div>
+<div class="strategy-section">
+<div class="strategy-type">⚡ MITIGATE</div>
+<ul class="risk-list">
+<li>Regular security audits</li>
+<li>Backup systems implementation</li>
+<li>Phased technology adoption</li>
+</ul>
+</div>
+<div class="strategy-section">
+<div class="strategy-type">🚨 RESCUE</div>
+<ul class="risk-list">
+<li>Incident response plans</li>
+<li>Disaster recovery protocols</li>
+<li>Cyber insurance coverage</li>
+</ul>
+</div>
+</div>
+</div>
+
+<!-- Top 10 Critical Risks -->
+<div class="slide" data-slide="6">
+<h1>Top 10 Critical Individual Risks</h1>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+<div>
+<div class="risk-card critical-risk" style="margin-bottom: 15px;">
+<h3>1. Major Equipment Failure</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">30</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">5/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">6/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card critical-risk" style="margin-bottom: 15px;">
+<h3>2. Quality Not Aligned with Market</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">30</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">5/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">6/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card critical-risk" style="margin-bottom: 15px;">
+<h3>3. Material Source and Pricing</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">25</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">5/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">5/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card critical-risk" style="margin-bottom: 15px;">
+<h3>4. Emergence of LCR Competition</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">25</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">5/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">5/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card critical-risk" style="margin-bottom: 15px;">
+<h3>5. Business Loss > New Acquisition</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">24</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">4/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">6/6</div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<div class="risk-card high-risk" style="margin-bottom: 15px;">
+<h3>6. Talent Development/Retention</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">24</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">4/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">6/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card high-risk" style="margin-bottom: 15px;">
+<h3>7. Sales Erosion vs Growth</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">20</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">4/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">5/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card high-risk" style="margin-bottom: 15px;">
+<h3>8. Competitive Disadvantages</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">20</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">4/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">5/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card high-risk" style="margin-bottom: 15px;">
+<h3>9. Lack of Market Aggressiveness</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">20</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">4/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">5/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card high-risk" style="margin-bottom: 15px;">
+<h3>10. Labor Shortage - Skilled Positions</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">20</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">4/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">5/6</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Integrated Risk Management -->
+<div class="slide" data-slide="7">
+<h1>Integrated Risk Management Framework</h1>
+<div class="risk-grid">
+<div class="risk-card" style="background: rgba(0, 255, 136, 0.05); border-color: rgba(0, 255, 136, 0.3);">
+<h2 style="color: #00ff88;">🛡️ Prevention Layer</h2>
+<h3>ELIMINATE</h3>
+<ul class="risk-list">
+<li>Strategic alignment and clear growth plans</li>
+<li>Comprehensive talent development programs</li>
+<li>Quality systems transformation</li>
+<li>Technology infrastructure modernization</li>
+<li>Supplier diversification initiatives</li>
+</ul>
+</div>
+<div class="risk-card" style="background: rgba(255, 215, 0, 0.05); border-color: rgba(255, 215, 0, 0.3);">
+<h2 style="color: #ffd700;">⚡ Protection Layer</h2>
+<h3>MITIGATE</h3>
+<ul class="risk-list">
+<li>Regular strategic and operational reviews</li>
+<li>Cross-training and skill development</li>
+<li>Customer feedback integration</li>
+<li>Cybersecurity hardening</li>
+<li>Strategic inventory management</li>
+</ul>
+</div>
+<div class="risk-card" style="background: rgba(255, 68, 68, 0.05); border-color: rgba(255, 68, 68, 0.3);">
+<h2 style="color: #ff4444;">🚨 Response Layer</h2>
+<h3>RESCUE</h3>
+<ul class="risk-list">
+<li>Crisis management protocols</li>
+<li>Emergency staffing arrangements</li>
+<li>Customer retention programs</li>
+<li>Disaster recovery plans</li>
+<li>Alternative production routing</li>
+</ul>
+</div>
+</div>
+<div style="margin-top: 40px; text-align: center;">
+<h3>Implementation Timeline</h3>
+<div style="display: flex; justify-content: space-around; margin-top: 20px;">
+<div class="risk-card" style="flex: 1; margin: 0 10px;">
+<h4 style="color: #ff4444;">Immediate Actions</h4>
+<p>Address Strategic Alignment</p>
+<p>Talent Crisis Response</p>
+<p>Quality Transformation</p>
+</div>
+<div class="risk-card" style="flex: 1; margin: 0 10px;">
+<h4 style="color: #ffd700;">Short-term (3-6 months)</h4>
+<p>Risk monitoring dashboard</p>
+<p>Detailed mitigation plans</p>
+<p>Cross-functional teams</p>
+</div>
+<div class="risk-card" style="flex: 1; margin: 0 10px;">
+<h4 style="color: #00ff88;">Long-term (6-12 months)</h4>
+<p>Build resilient capabilities</p>
+<p>Sustainable advantages</p>
+<p>Organizational agility</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="navigation">
+<button class="nav-button" id="prevBtn">← Previous</button>
+<div class="slide-indicator" id="slideIndicator"></div>
+<button class="nav-button" id="nextBtn">Next →</button>
+</div>
+</div>
+
+<script>
+// Simple slideshow script
+(function() {
+var currentSlide = 0;
+var slides = [];
+var totalSlides = 0;
+
+function init() {
+// Wait a bit to ensure DOM is ready
+setTimeout(function() {
+// Get slides
+var slideElements = document.querySelectorAll('.slide');
+slides = Array.prototype.slice.call(slideElements);
+totalSlides = slides.length;
+
+console.log('Found ' + totalSlides + ' slides');
+
+// Create dots
+var indicatorContainer = document.getElementById('slideIndicator');
+indicatorContainer.innerHTML = '';
+
+for (var i = 0; i < totalSlides; i++) {
+var dot = document.createElement('span');
+dot.className = 'dot';
+if (i === 0) dot.className = 'dot active';
+
+// Use closure to capture i
+(function(index) {
+dot.onclick = function() {
+goToSlide(index);
+};
+})(i);
+
+indicatorContainer.appendChild(dot);
+}
+
+// Button handlers
+document.getElementById('prevBtn').onclick = function() {
+if (currentSlide > 0) {
+goToSlide(currentSlide - 1);
+}
+};
+
+document.getElementById('nextBtn').onclick = function() {
+if (currentSlide < totalSlides - 1) {
+goToSlide(currentSlide + 1);
+}
+};
+
+// Keyboard
+document.onkeydown = function(e) {
+if (e.key === 'ArrowLeft' && currentSlide > 0) {
+goToSlide(currentSlide - 1);
+} else if (e.key === 'ArrowRight' && currentSlide < totalSlides - 1) {
+goToSlide(currentSlide + 1);
+}
+};
+
+// Show first slide
+goToSlide(0);
+}, 100);
+}
+
+function goToSlide(n) {
+// Hide all
+for (var i = 0; i < slides.length; i++) {
+slides[i].style.display = 'none';
+slides[i].className = 'slide';
+}
+
+// Show current
+currentSlide = n;
+slides[currentSlide].style.display = 'block';
+slides[currentSlide].className = 'slide active';
+
+// Update dots
+var dots = document.querySelectorAll('.dot');
+for (var i = 0; i < dots.length; i++) {
+dots[i].className = 'dot';
+}
+if (dots[currentSlide]) {
+dots[currentSlide].className = 'dot active';
+}
+
+// Update buttons
+document.getElementById('prevBtn').disabled = (currentSlide === 0);
+document.getElementById('nextBtn').disabled = (currentSlide === totalSlides - 1);
+}
+
+// Start
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+init();
+} else {
+window.addEventListener('DOMContentLoaded', init);
+}
+})();
+</script>
+</body>
+</html>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background: #0a0a0a;
+color: #fff;
+overflow: hidden;
+height: 100vh;
+}
+
+.presentation-container {
+width: 100%;
+height: 100vh;
+display: flex;
+flex-direction: column;
+}
+
+.slides-wrapper {
+flex: 1;
+position: relative;
+overflow: hidden;
+background: #0a0a0a;
+}
+
+.slide {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+padding: 50px;
+background: linear-gradient(135deg, #1a0f1f 0%, #2d1b3d 50%, #0f1720 100%);
+overflow-y: auto;
+display: none;
+}
+
+.slide.active {
+display: block;
+}
+
+.slide h1 {
+font-size: 54px;
+margin-bottom: 30px;
+text-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+background: linear-gradient(45deg, #ff4444, #ff8888);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+
+.slide h2 {
+font-size: 36px;
+margin-bottom: 20px;
+color: #ffd700;
+text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+}
+
+.slide h3 {
+font-size: 26px;
+margin: 20px 0 15px 0;
+color: #00ff88;
+}
+
+.risk-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+gap: 25px;
+margin-top: 30px;
+}
+
+.risk-card {
+background: rgba(255, 255, 255, 0.03);
+border: 2px solid rgba(255, 255, 255, 0.1);
+border-radius: 20px;
+padding: 25px;
+backdrop-filter: blur(10px);
+transition: all 0.4s ease;
+position: relative;
+overflow: hidden;
+}
+
+.risk-card::before {
+content: '';
+position: absolute;
+top: -2px;
+left: -2px;
+right: -2px;
+bottom: -2px;
+background: linear-gradient(45deg, #ff4444, #ff8888, #ffd700, #ff4444);
+border-radius: 20px;
+opacity: 0;
+z-index: -1;
+transition: opacity 0.4s ease;
+}
+
+.risk-card:hover::before {
+opacity: 0.3;
+}
+
+.risk-card:hover {
+transform: translateY(-5px) scale(1.02);
+background: rgba(255, 255, 255, 0.06);
+box-shadow: 0 10px 40px rgba(255, 68, 68, 0.3);
+}
+
+.critical-risk {
+border-color: rgba(255, 68, 68, 0.5);
+background: rgba(255, 68, 68, 0.05);
+}
+
+.high-risk {
+border-color: rgba(255, 165, 0, 0.5);
+background: rgba(255, 165, 0, 0.05);
+}
+
+.medium-risk {
+border-color: rgba(255, 215, 0, 0.5);
+background: rgba(255, 215, 0, 0.05);
+}
+
+.risk-score {
+display: inline-block;
+background: linear-gradient(45deg, #ff4444, #ff6666);
+color: white;
+padding: 8px 20px;
+border-radius: 25px;
+font-size: 18px;
+font-weight: bold;
+margin-bottom: 15px;
+box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);
+}
+
+.risk-metrics {
+display: flex;
+gap: 15px;
+margin: 15px 0;
+}
+
+.metric {
+background: rgba(0, 0, 0, 0.5);
+padding: 10px 15px;
+border-radius: 10px;
+border: 1px solid rgba(255, 255, 255, 0.2);
+flex: 1;
+text-align: center;
+}
+
+.metric-label {
+font-size: 12px;
+color: #888;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+
+.metric-value {
+font-size: 24px;
+font-weight: bold;
+color: #ffd700;
+margin-top: 5px;
+}
+
+.risk-list {
+list-style: none;
+margin-top: 15px;
+}
+
+.risk-list li {
+padding: 10px 0;
+padding-left: 30px;
+position: relative;
+font-size: 16px;
+line-height: 1.6;
+color: #e0e0e0;
+}
+
+.risk-list li:before {
+content: "⚠";
+position: absolute;
+left: 0;
+color: #ff4444;
+font-size: 16px;
+}
+
+.strategy-section {
+margin-top: 20px;
+padding: 20px;
+background: rgba(0, 0, 0, 0.3);
+border-radius: 15px;
+border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.strategy-type {
+font-weight: bold;
+color: #00ff88;
+margin-bottom: 10px;
+text-transform: uppercase;
+letter-spacing: 1px;
+font-size: 14px;
+}
+
+.navigation {
+height: 80px;
+background: rgba(0, 0, 0, 0.95);
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 0 40px;
+border-top: 2px solid #333;
+backdrop-filter: blur(10px);
+}
+
+.nav-button {
+background: linear-gradient(45deg, #2d1b3d, #1a0f1f);
+color: white;
+border: 2px solid #ff4444;
+padding: 12px 35px;
+border-radius: 30px;
+font-size: 16px;
+cursor: pointer;
+transition: all 0.3s ease;
+text-transform: uppercase;
+letter-spacing: 1px;
+font-weight: 600;
+}
+
+.nav-button:hover:not(:disabled) {
+background: linear-gradient(45deg, #ff4444, #ff6666);
+transform: scale(1.05);
+box-shadow: 0 5px 20px rgba(255, 68, 68, 0.5);
+}
+
+.nav-button:disabled {
+background: #333;
+border-color: #555;
+cursor: not-allowed;
+opacity: 0.5;
+}
+
+.slide-indicator {
+display: flex;
+gap: 12px;
+}
+
+.dot {
+width: 14px;
+height: 14px;
+border-radius: 50%;
+background: #555;
+cursor: pointer;
+transition: all 0.3s ease;
+border: 2px solid transparent;
+}
+
+.dot.active {
+background: #ff4444;
+transform: scale(1.4);
+border-color: #ff6666;
+box-shadow: 0 0 10px rgba(255, 68, 68, 0.6);
+}
+
+.title-slide {
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+background: radial-gradient(ellipse at center, rgba(255, 68, 68, 0.1) 0%, #0a0a0a 100%);
+}
+
+.title-slide h1 {
+font-size: 72px;
+margin-bottom: 30px;
+animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+0%, 100% { transform: scale(1); }
+50% { transform: scale(1.05); }
+}
+
+.title-slide .subtitle {
+font-size: 28px;
+color: #ffd700;
+margin-bottom: 50px;
+text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.overview-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 30px;
+margin-top: 50px;
+max-width: 900px;
+}
+
+.overview-card {
+background: rgba(255, 255, 255, 0.05);
+border: 2px solid rgba(255, 68, 68, 0.3);
+border-radius: 20px;
+padding: 30px;
+text-align: center;
+transition: all 0.4s ease;
+}
+
+.overview-card:hover {
+background: rgba(255, 255, 255, 0.1);
+transform: translateY(-10px) scale(1.05);
+border-color: rgba(255, 68, 68, 0.6);
+box-shadow: 0 15px 35px rgba(255, 68, 68, 0.3);
+}
+
+.overview-card h3 {
+font-size: 22px;
+margin-bottom: 15px;
+color: #ff6666;
+}
+
+.overview-card .count {
+font-size: 48px;
+font-weight: bold;
+color: #ffd700;
+text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+.risk-matrix {
+display: grid;
+grid-template-columns: repeat(6, 1fr);
+grid-template-rows: repeat(6, 1fr);
+gap: 5px;
+max-width: 600px;
+margin: 30px auto;
+aspect-ratio: 1;
+background: rgba(0, 0, 0, 0.5);
+padding: 20px;
+border-radius: 15px;
+}
+
+.matrix-cell {
+background: rgba(255, 255, 255, 0.05);
+border: 1px solid rgba(255, 255, 255, 0.1);
+border-radius: 8px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 14px;
+transition: all 0.3s ease;
+}
+
+.matrix-cell.low {
+background: rgba(0, 255, 0, 0.2);
+}
+
+.matrix-cell.medium {
+background: rgba(255, 215, 0, 0.2);
+}
+
+.matrix-cell.high {
+background: rgba(255, 165, 0, 0.2);
+}
+
+.matrix-cell.critical {
+background: rgba(255, 68, 68, 0.3);
+animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+0%, 100% { box-shadow: 0 0 5px rgba(255, 68, 68, 0.5); }
+50% { box-shadow: 0 0 20px rgba(255, 68, 68, 0.8); }
+}
+
+.split-view {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 40px;
+margin-top: 30px;
+height: calc(100vh - 300px);
+}
+
+.split-section {
+overflow-y: auto;
+padding-right: 20px;
+}
+
+.split-section h2 {
+position: sticky;
+top: 0;
+background: rgba(0, 0, 0, 0.9);
+padding: 15px 0;
+margin-bottom: 25px;
+z-index: 10;
+backdrop-filter: blur(10px);
+}
+
+.progress-bar {
+width: 100%;
+height: 20px;
+background: rgba(0, 0, 0, 0.5);
+border-radius: 10px;
+overflow: hidden;
+margin-top: 10px;
+}
+
+.progress-fill {
+height: 100%;
+background: linear-gradient(90deg, #ff4444, #ff8888);
+transition: width 0.6s ease;
+}
+
+@media (max-width: 768px) {
+.slide {
+padding: 30px;
+}
+
+.slide h1 {
+font-size: 36px;
+}
+
+.risk-grid {
+grid-template-columns: 1fr;
+}
+
+.overview-grid {
+grid-template-columns: 1fr;
+}
+
+.split-view {
+grid-template-columns: 1fr;
+}
+}
+</style>
+</head>
+<body>
+<div class="presentation-container">
+<div class="slides-wrapper">
+<!-- Title Slide -->
+<div class="slide active title-slide">
+<h1>⚠️ Risk Analysis</h1>
+<p class="subtitle">Comprehensive Risk Assessment & Mitigation Strategies</p>
+<div class="overview-grid">
+<div class="overview-card">
+<h3>Total Risks</h3>
+<div class="count">47</div>
+<p>Identified risks</p>
+</div>
+<div class="overview-card">
+<h3>Risk Categories</h3>
+<div class="count">10</div>
+<p>Thematic groups</p>
+</div>
+<div class="overview-card">
+<h3>Critical Risks</h3>
+<div class="count">10</div>
+<p>Score ≥ 20</p>
+</div>
+</div>
+</div>
+
+<!-- Risk Matrix Overview -->
+<div class="slide">
+<h1>Risk Assessment Matrix</h1>
+<p style="text-align: center; font-size: 20px; margin-bottom: 30px;">
+Risk Score = Probability × Impact (Max: 36)
+</p>
+<div style="display: flex; justify-content: space-around; align-items: center;">
+<div>
+<h3>Risk Categories by Score</h3>
+<div class="risk-card" style="margin: 10px 0;">
+<span class="risk-score">18.8</span>
+<h4>Strategic & Growth</h4>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Probability</div>
+<div class="metric-value">4.3/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">4.3/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card" style="margin: 10px 0;">
+<span class="risk-score">17.8</span>
+<h4>Talent & Workforce</h4>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Probability</div>
+<div class="metric-value">3.3/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">5.3/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card" style="margin: 10px 0;">
+<span class="risk-score">17.1</span>
+<h4>Market & Customer</h4>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Probability</div>
+<div class="metric-value">3.5/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">4.9/6</div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h3>Risk Distribution</h3>
+<div style="background: rgba(0,0,0,0.5); padding: 30px; border-radius: 15px;">
+<div style="margin: 20px 0;">
+<h4 style="color: #ff4444;">Critical (≥20): 10 risks</h4>
+<div class="progress-bar">
+<div class="progress-fill" style="width: 21%; background: #ff4444;"></div>
+</div>
+</div>
+<div style="margin: 20px 0;">
+<h4 style="color: #ffa500;">High (15-19): 14 risks</h4>
+<div class="progress-bar">
+<div class="progress-fill" style="width: 30%; background: #ffa500;"></div>
+</div>
+</div>
+<div style="margin: 20px 0;">
+<h4 style="color: #ffd700;">Medium (10-14): 15 risks</h4>
+<div class="progress-bar">
+<div class="progress-fill" style="width: 32%; background: #ffd700;"></div>
+</div>
+</div>
+<div style="margin: 20px 0;">
+<h4 style="color: #00ff88;">Low (<10): 8 risks</h4>
+<div class="progress-bar">
+<div class="progress-fill" style="width: 17%; background: #00ff88;"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Strategic & Growth Risks -->
+<div class="slide">
+<h1>Strategic & Growth Risks</h1>
+<span class="risk-score">Risk Score: 18.8 (HIGHEST)</span>
+<div class="split-view">
+<div class="split-section">
+<h2>Risk Assessment</h2>
+<div class="risk-card critical-risk">
+<h3>Key Risks</h3>
+<ul class="risk-list">
+<li>Continued erosion of sales vs growth targets</li>
+<li>Business stagnation - wins/losses netting out</li>
+<li>Strategic misalignment across organization</li>
+</ul>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Probability</div>
+<div class="metric-value">4.3/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">4.3/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Risks</div>
+<div class="metric-value">3</div>
+</div>
+</div>
+</div>
+<div class="risk-card">
+<h3>Organizations Affected</h3>
+<p style="color: #ff6666; font-weight: bold;">All divisions - potential downsizing and underinvestment</p>
+</div>
+</div>
+<div class="split-section">
+<h2>Mitigation Strategies</h2>
+<div class="strategy-section">
+<div class="strategy-type">🛡️ ELIMINATE</div>
+<ul class="risk-list">
+<li>Develop clear growth strategy with measurable targets</li>
+<li>Align all divisions on strategic priorities</li>
+<li>Create unified vision and execution plan</li>
+</ul>
+</div>
+<div class="strategy-section">
+<div class="strategy-type">⚡ MITIGATE</div>
+<ul class="risk-list">
+<li>Regular strategic reviews and adjustments</li>
+<li>Market opportunity assessments</li>
+<li>Investment in high-growth areas</li>
+</ul>
+</div>
+<div class="strategy-section">
+<div class="strategy-type">🚨 RESCUE</div>
+<ul class="risk-list">
+<li>Emergency restructuring plans</li>
+<li>Rapid pivot capabilities</li>
+<li>Strategic partnership options</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Talent & Workforce Risks -->
+<div class="slide">
+<h1>Talent & Workforce Risks</h1>
+<span class="risk-score">Risk Score: 17.8</span>
+<div class="split-view">
+<div class="split-section">
+<h2>Risk Assessment</h2>
+<div class="risk-card critical-risk">
+<h3>Key Risks</h3>
+<ul class="risk-list">
+<li>Labor shortage for skilled positions</li>
+<li>Low retention due to lack of talent development</li>
+<li>Skills gap in critical production areas</li>
+</ul>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Probability</div>
+<div class="metric-value">3.3/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">5.3/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Risks</div>
+<div class="metric-value">3</div>
+</div>
+</div>
+</div>
+<div class="risk-card">
+<h3>Critical Areas</h3>
+<p>Production departments, especially:</p>
+<ul class="risk-list">
+<li>CNC machining centers</li>
+<li>Special equipment operation</li>
+<li>Programming expertise</li>
+</ul>
+</div>
+</div>
+<div class="split-section">
+<h2>Mitigation Strategies</h2>
+<div class="strategy-section">
+<div class="strategy-type">🛡️ ELIMINATE</div>
+<ul class="risk-list">
+<li>Comprehensive talent development programs</li>
+<li>Competitive compensation packages</li>
+<li>Career progression pathways</li>
+</ul>
+</div>
+<div class="strategy-section">
+<div class="strategy-type">⚡ MITIGATE</div>
+<ul class="risk-list">
+<li>Cross-training initiatives</li>
+<li>University partnerships</li>
+<li>Apprenticeship programs</li>
+</ul>
+</div>
+<div class="strategy-section">
+<div class="strategy-type">🚨 RESCUE</div>
+<ul class="risk-list">
+<li>Emergency contractor arrangements</li>
+<li>Overtime programs</li>
+<li>Temporary skill importation</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Market & Customer Risks -->
+<div class="slide">
+<h1>Market & Customer Risks</h1>
+<span class="risk-score">Risk Score: 17.1</span>
+<div class="risk-grid">
+<div class="risk-card high-risk">
+<h3>Primary Risks (8 total)</h3>
+<ul class="risk-list">
+<li>Quality misalignment with market expectations</li>
+<li>Continued emergence of low-cost competition</li>
+<li>Loss of existing business faster than new acquisition</li>
+<li>Competitive disadvantages (cost, lead time, quality)</li>
+</ul>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Probability</div>
+<div class="metric-value">3.5/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">4.9/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card">
+<h3>Affected Areas</h3>
+<p>Sales, Operations, Finance - particularly:</p>
+<ul class="risk-list">
+<li>Lewiston facility (high vulnerability)</li>
+<li>Euclid operations</li>
+<li>Fixed cost impacts to margins</li>
+</ul>
+</div>
+<div class="risk-card">
+<h3>Elimination Strategies</h3>
+<ul class="risk-list">
+<li>Quality improvement initiatives</li>
+<li>Cost reduction programs</li>
+<li>Market differentiation strategy</li>
+<li>Value engineering projects</li>
+</ul>
+</div>
+<div class="risk-card">
+<h3>Mitigation Strategies</h3>
+<ul class="risk-list">
+<li>Customer feedback loops</li>
+<li>Competitive analysis programs</li>
+<li>Agile market response</li>
+<li>Pricing optimization</li>
+</ul>
+</div>
+</div>
+</div>
+
+<!-- Technology & Systems Risks -->
+<div class="slide">
+<h1>Technology & Systems Risks</h1>
+<span class="risk-score">Risk Score: 16.8 | 17 Risks Identified</span>
+<div class="risk-grid">
+<div class="risk-card high-risk">
+<h3>Critical Technology Risks</h3>
+<ul class="risk-list">
+<li>Cybersecurity vulnerabilities</li>
+<li>Legacy system failures</li>
+<li>Technology adoption lag</li>
+<li>Data integrity issues</li>
+</ul>
+<p style="margin-top: 15px; color: #ff6666;">
+<strong>Most Vulnerable:</strong> Euclid facility
+</p>
+</div>
+<div class="risk-card">
+<h3>Risk Impact Analysis</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Probability</div>
+<div class="metric-value">3.4/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">5.0/6</div>
+</div>
+</div>
+<p style="margin-top: 15px;">Potential to disable most business operations</p>
+</div>
+<div class="strategy-section">
+<div class="strategy-type">🛡️ ELIMINATE</div>
+<ul class="risk-list">
+<li>Comprehensive IT modernization</li>
+<li>Cybersecurity infrastructure upgrades</li>
+<li>Legacy system replacement</li>
+</ul>
+</div>
+<div class="strategy-section">
+<div class="strategy-type">⚡ MITIGATE</div>
+<ul class="risk-list">
+<li>Regular security audits</li>
+<li>Backup systems implementation</li>
+<li>Phased technology adoption</li>
+</ul>
+</div>
+<div class="strategy-section">
+<div class="strategy-type">🚨 RESCUE</div>
+<ul class="risk-list">
+<li>Incident response plans</li>
+<li>Disaster recovery protocols</li>
+<li>Cyber insurance coverage</li>
+</ul>
+</div>
+</div>
+</div>
+
+<!-- Top 10 Critical Risks -->
+<div class="slide">
+<h1>Top 10 Critical Individual Risks</h1>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+<div>
+<div class="risk-card critical-risk" style="margin-bottom: 15px;">
+<h3>1. Major Equipment Failure</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">30</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">5/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">6/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card critical-risk" style="margin-bottom: 15px;">
+<h3>2. Quality Not Aligned with Market</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">30</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">5/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">6/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card critical-risk" style="margin-bottom: 15px;">
+<h3>3. Material Source and Pricing</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">25</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">5/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">5/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card critical-risk" style="margin-bottom: 15px;">
+<h3>4. Emergence of LCR Competition</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">25</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">5/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">5/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card critical-risk" style="margin-bottom: 15px;">
+<h3>5. Business Loss > New Acquisition</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">24</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">4/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">6/6</div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<div class="risk-card high-risk" style="margin-bottom: 15px;">
+<h3>6. Talent Development/Retention</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">24</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">4/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">6/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card high-risk" style="margin-bottom: 15px;">
+<h3>7. Sales Erosion vs Growth</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">20</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">4/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">5/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card high-risk" style="margin-bottom: 15px;">
+<h3>8. Competitive Disadvantages</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">20</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">4/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">5/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card high-risk" style="margin-bottom: 15px;">
+<h3>9. Lack of Market Aggressiveness</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">20</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">4/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">5/6</div>
+</div>
+</div>
+</div>
+<div class="risk-card high-risk" style="margin-bottom: 15px;">
+<h3>10. Labor Shortage - Skilled Positions</h3>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Score</div>
+<div class="metric-value">20</div>
+</div>
+<div class="metric">
+<div class="metric-label">Prob</div>
+<div class="metric-value">4/6</div>
+</div>
+<div class="metric">
+<div class="metric-label">Impact</div>
+<div class="metric-value">5/6</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Integrated Risk Management -->
+<div class="slide">
+<h1>Integrated Risk Management Framework</h1>
+<div class="risk-grid">
+<div class="risk-card" style="background: rgba(0, 255, 136, 0.05); border-color: rgba(0, 255, 136, 0.3);">
+<h2 style="color: #00ff88;">🛡️ Prevention Layer</h2>
+<h3>ELIMINATE</h3>
+<ul class="risk-list">
+<li>Strategic alignment and clear growth plans</li>
+<li>Comprehensive talent development programs</li>
+<li>Quality systems transformation</li>
+<li>Technology infrastructure modernization</li>
+<li>Supplier diversification initiatives</li>
+</ul>
+</div>
+<div class="risk-card" style="background: rgba(255, 215, 0, 0.05); border-color: rgba(255, 215, 0, 0.3);">
+<h2 style="color: #ffd700;">⚡ Protection Layer</h2>
+<h3>MITIGATE</h3>
+<ul class="risk-list">
+<li>Regular strategic and operational reviews</li>
+<li>Cross-training and skill development</li>
+<li>Customer feedback integration</li>
+<li>Cybersecurity hardening</li>
+<li>Strategic inventory management</li>
+</ul>
+</div>
+<div class="risk-card" style="background: rgba(255, 68, 68, 0.05); border-color: rgba(255, 68, 68, 0.3);">
+<h2 style="color: #ff4444;">🚨 Response Layer</h2>
+<h3>RESCUE</h3>
+<ul class="risk-list">
+<li>Crisis management protocols</li>
+<li>Emergency staffing arrangements</li>
+<li>Customer retention programs</li>
+<li>Disaster recovery plans</li>
+<li>Alternative production routing</li>
+</ul>
+</div>
+</div>
+<div style="margin-top: 40px; text-align: center;">
+<h3>Implementation Timeline</h3>
+<div style="display: flex; justify-content: space-around; margin-top: 20px;">
+<div class="risk-card" style="flex: 1; margin: 0 10px;">
+<h4 style="color: #ff4444;">Immediate Actions</h4>
+<p>Address Strategic Alignment</p>
+<p>Talent Crisis Response</p>
+<p>Quality Transformation</p>
+</div>
+<div class="risk-card" style="flex: 1; margin: 0 10px;">
+<h4 style="color: #ffd700;">Short-term (3-6 months)</h4>
+<p>Risk monitoring dashboard</p>
+<p>Detailed mitigation plans</p>
+<p>Cross-functional teams</p>
+</div>
+<div class="risk-card" style="flex: 1; margin: 0 10px;">
+<h4 style="color: #00ff88;">Long-term (6-12 months)</h4>
+<p>Build resilient capabilities</p>
+<p>Sustainable advantages</p>
+<p>Organizational agility</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="navigation">
+<button class="nav-button" id="prevBtn">← Previous</button>
+<div class="slide-indicator" id="slideIndicator"></div>
+<button class="nav-button" id="nextBtn">Next →</button>
+</div>
+</div>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+
+function initializeIndicators() {
+const indicatorContainer = document.getElementById('slideIndicator');
+indicatorContainer.innerHTML = '';
+for (let i = 0; i < totalSlides; i++) {
+const dot = document.createElement('span');
+dot.className = 'dot';
+if (i === 0) dot.classList.add('active');
+dot.onclick = () => goToSlide(i);
+indicatorContainer.appendChild(dot);
+}
+}
+
+function showSlide(index) {
+if (index < 0) index = totalSlides - 1;
+if (index >= totalSlides) index = 0;
+
+slides.forEach((slide, i) => {
+slide.classList.remove('active', 'prev');
+if (i < index) slide.classList.add('prev');
