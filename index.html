@@ -470,79 +470,83 @@ grid-template-columns: 1fr;
 <div class="slide" data-slide="1">
 <h1>Risk Assessment Matrix</h1>
 <p style="text-align: center; font-size: 20px; margin-bottom: 30px;">
-Risk Score = Probability × Impact (Max: 36)
+Balanced Risk Score = Severity × (1 + Mention %)
 </p>
 <div style="display: flex; justify-content: space-around; align-items: center;">
 <div>
-<h3>Risk Categories by Score</h3>
+<h3>Risk Categories by Balanced Score</h3>
 <div class="risk-card" style="margin: 10px 0;">
-<span class="risk-score">18.8</span>
-<h4>Strategic & Growth</h4>
+<span class="risk-score">23.1</span>
+<h4>Technology & Systems</h4>
 <div class="risk-metrics">
 <div class="metric">
-<div class="metric-label">Probability</div>
-<div class="metric-value">4.3/6</div>
+<div class="metric-label">Severity</div>
+<div class="metric-value">17.0</div>
 </div>
 <div class="metric">
-<div class="metric-label">Impact</div>
-<div class="metric-value">4.3/6</div>
+<div class="metric-label">Mentions</div>
+<div class="metric-value">36%</div>
 </div>
 </div>
 </div>
 <div class="risk-card" style="margin: 10px 0;">
-<span class="risk-score">17.8</span>
-<h4>Talent & Workforce</h4>
-<div class="risk-metrics">
-<div class="metric">
-<div class="metric-label">Probability</div>
-<div class="metric-value">3.3/6</div>
-</div>
-<div class="metric">
-<div class="metric-label">Impact</div>
-<div class="metric-value">5.3/6</div>
-</div>
-</div>
-</div>
-<div class="risk-card" style="margin: 10px 0;">
-<span class="risk-score">17.1</span>
+<span class="risk-score">20.1</span>
 <h4>Market & Customer</h4>
 <div class="risk-metrics">
 <div class="metric">
-<div class="metric-label">Probability</div>
-<div class="metric-value">3.5/6</div>
+<div class="metric-label">Severity</div>
+<div class="metric-value">17.2</div>
 </div>
 <div class="metric">
-<div class="metric-label">Impact</div>
-<div class="metric-value">4.9/6</div>
+<div class="metric-label">Mentions</div>
+<div class="metric-value">17%</div>
+</div>
+</div>
+</div>
+<div class="risk-card" style="margin: 10px 0;">
+<span class="risk-score">19.7</span>
+<h4>Strategic & Growth</h4>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Severity</div>
+<div class="metric-value">18.5</div>
+</div>
+<div class="metric">
+<div class="metric-label">Mentions</div>
+<div class="metric-value">6%</div>
 </div>
 </div>
 </div>
 </div>
 <div>
-<h3>Risk Distribution</h3>
+<h3>How Frequency Impacts Risk</h3>
 <div style="background: rgba(0,0,0,0.5); padding: 30px; border-radius: 15px;">
 <div style="margin: 20px 0;">
-<h4 style="color: #ff4444;">Critical (≥20): 10 risks</h4>
+<h4 style="color: #ff4444;">Technology & Systems</h4>
+<p>Base: 17.0 × 1.36 = 23.1</p>
 <div class="progress-bar">
-<div class="progress-fill" style="width: 21%; background: #ff4444;"></div>
+<div class="progress-fill" style="width: 100%; background: #ff4444;"></div>
 </div>
 </div>
 <div style="margin: 20px 0;">
-<h4 style="color: #ffa500;">High (15-19): 14 risks</h4>
+<h4 style="color: #ffa500;">Market & Customer</h4>
+<p>Base: 17.2 × 1.17 = 20.1</p>
 <div class="progress-bar">
-<div class="progress-fill" style="width: 30%; background: #ffa500;"></div>
+<div class="progress-fill" style="width: 87%; background: #ffa500;"></div>
 </div>
 </div>
 <div style="margin: 20px 0;">
-<h4 style="color: #ffd700;">Medium (10-14): 15 risks</h4>
+<h4 style="color: #ffd700;">Strategic & Growth</h4>
+<p>Base: 18.5 × 1.06 = 19.7</p>
 <div class="progress-bar">
-<div class="progress-fill" style="width: 32%; background: #ffd700;"></div>
+<div class="progress-fill" style="width: 85%; background: #ffd700;"></div>
 </div>
 </div>
 <div style="margin: 20px 0;">
-<h4 style="color: #00ff88;">Low (<10): 8 risks</h4>
+<h4 style="color: #00ff88;">Talent & Workforce</h4>
+<p>Base: 17.5 × 1.06 = 18.6</p>
 <div class="progress-bar">
-<div class="progress-fill" style="width: 17%; background: #00ff88;"></div>
+<div class="progress-fill" style="width: 80%; background: #00ff88;"></div>
 </div>
 </div>
 </div>
@@ -550,15 +554,159 @@ Risk Score = Probability × Impact (Max: 36)
 </div>
 </div>
 
-<!-- Strategic & Growth Risks -->
+<!-- Technology & Systems Risks - NOW #1 -->
 <div class="slide" data-slide="2">
-<h1>Strategic & Growth Risks</h1>
-<span class="risk-score">Risk Score: 18.8 (HIGHEST)</span>
+<h1>Technology & Systems Risks</h1>
+<span class="risk-score">Risk Score: 23.1 (HIGHEST PRIORITY)</span>
 <div class="split-view">
 <div class="split-section">
 <h2>Risk Assessment</h2>
 <div class="risk-card critical-risk">
-<h3>Key Risks</h3>
+<h3>Why #1 Priority</h3>
+<p style="color: #ff6666; font-weight: bold; margin-bottom: 15px;">
+36% of all risk mentions were technology-related
+</p>
+<ul class="risk-list">
+<li>Cybersecurity vulnerabilities</li>
+<li>Legacy system failures</li>
+<li>Technology adoption lag</li>
+<li>Data integrity issues</li>
+</ul>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Base Severity</div>
+<div class="metric-value">17.0</div>
+</div>
+<div class="metric">
+<div class="metric-label">Mention Boost</div>
+<div class="metric-value">+36%</div>
+</div>
+<div class="metric">
+<div class="metric-label">Total Risks</div>
+<div class="metric-value">17</div>
+</div>
+</div>
+</div>
+<div class="risk-card">
+<h3>Most Vulnerable</h3>
+<p style="color: #ff6666; font-weight: bold;">Euclid facility</p>
+<p>Potential to disable most business operations</p>
+</div>
+</div>
+<div class="split-section">
+<h2>Mitigation Strategies</h2>
+<div class="strategy-section">
+<div class="strategy-type">🛡️ ELIMINATE</div>
+<ul class="risk-list">
+<li>Comprehensive IT modernization</li>
+<li>Cybersecurity infrastructure upgrades</li>
+<li>Legacy system replacement</li>
+</ul>
+</div>
+<div class="strategy-section">
+<div class="strategy-type">⚡ MITIGATE</div>
+<ul class="risk-list">
+<li>Regular security audits</li>
+<li>Backup systems implementation</li>
+<li>Phased technology adoption</li>
+</ul>
+</div>
+<div class="strategy-section">
+<div class="strategy-type">🚨 RESCUE</div>
+<ul class="risk-list">
+<li>Incident response plans</li>
+<li>Disaster recovery protocols</li>
+<li>Cyber insurance coverage</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Market & Customer Risks - NOW #2 -->
+<div class="slide" data-slide="3">
+<h1>Market & Customer Risks</h1>
+<span class="risk-score">Risk Score: 20.1</span>
+<div class="split-view">
+<div class="split-section">
+<h2>Risk Assessment</h2>
+<div class="risk-card critical-risk">
+<h3>Key Risks (8 total, 17% of mentions)</h3>
+<ul class="risk-list">
+<li>Quality misalignment with market expectations</li>
+<li>Continued emergence of low-cost competition</li>
+<li>Loss of existing business faster than new acquisition</li>
+<li>Competitive disadvantages (cost, lead time, quality)</li>
+</ul>
+<div class="risk-metrics">
+<div class="metric">
+<div class="metric-label">Base Severity</div>
+<div class="metric-value">17.2</div>
+</div>
+<div class="metric">
+<div class="metric-label">Mention Boost</div>
+<div class="metric-value">+17%</div>
+</div>
+<div class="metric">
+<div class="metric-label">Total Risks</div>
+<div class="metric-value">8</div>
+</div>
+</div>
+</div>
+<div class="risk-card">
+<h3>Affected Areas</h3>
+<p>Sales, Operations, Finance - particularly:</p>
+<ul class="risk-list">
+<li>Lewiston facility (high vulnerability)</li>
+<li>Euclid operations</li>
+<li>Fixed cost impacts to margins</li>
+</ul>
+</div>
+</div>
+<div class="split-section">
+<h2>Mitigation Strategies</h2>
+<div class="strategy-section">
+<div class="strategy-type">🛡️ ELIMINATE</div>
+<ul class="risk-list">
+<li>Quality improvement initiatives</li>
+<li>Cost reduction programs</li>
+<li>Market differentiation strategy</li>
+<li>Value engineering projects</li>
+</ul>
+</div>
+<div class="strategy-section">
+<div class="strategy-type">⚡ MITIGATE</div>
+<ul class="risk-list">
+<li>Customer feedback loops</li>
+<li>Competitive analysis programs</li>
+<li>Agile market response</li>
+<li>Pricing optimization</li>
+</ul>
+</div>
+<div class="strategy-section">
+<div class="strategy-type">🚨 RESCUE</div>
+<ul class="risk-list">
+<li>Customer retention programs</li>
+<li>Emergency pricing strategies</li>
+<li>Rapid quality interventions</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Strategic & Growth Risks - NOW #3 -->
+<div class="slide" data-slide="4">
+<h1>Strategic & Growth Risks</h1>
+<span class="risk-score">Risk Score: 19.7</span>
+<div class="split-view">
+<div class="split-section">
+<h2>Risk Assessment</h2>
+<div class="risk-card high-risk">
+<h3>High Severity, Lower Frequency</h3>
+<p style="color: #ffa500; margin-bottom: 15px;">
+Highest base severity (18.5) but only 6% of mentions
+</p>
 <ul class="risk-list">
 <li>Continued erosion of sales vs growth targets</li>
 <li>Business stagnation - wins/losses netting out</li>
@@ -566,15 +714,15 @@ Risk Score = Probability × Impact (Max: 36)
 </ul>
 <div class="risk-metrics">
 <div class="metric">
-<div class="metric-label">Probability</div>
-<div class="metric-value">4.3/6</div>
+<div class="metric-label">Base Severity</div>
+<div class="metric-value">18.5</div>
 </div>
 <div class="metric">
-<div class="metric-label">Impact</div>
-<div class="metric-value">4.3/6</div>
+<div class="metric-label">Mention Boost</div>
+<div class="metric-value">+6%</div>
 </div>
 <div class="metric">
-<div class="metric-label">Risks</div>
+<div class="metric-label">Total Risks</div>
 <div class="metric-value">3</div>
 </div>
 </div>
@@ -614,15 +762,18 @@ Risk Score = Probability × Impact (Max: 36)
 </div>
 </div>
 
-<!-- Talent & Workforce Risks -->
-<div class="slide" data-slide="3">
+<!-- Talent & Workforce Risks - NOW #4 -->
+<div class="slide" data-slide="5">
 <h1>Talent & Workforce Risks</h1>
-<span class="risk-score">Risk Score: 17.8</span>
+<span class="risk-score">Risk Score: 18.6</span>
 <div class="split-view">
 <div class="split-section">
 <h2>Risk Assessment</h2>
-<div class="risk-card critical-risk">
-<h3>Key Risks</h3>
+<div class="risk-card high-risk">
+<h3>High Impact, Limited Mentions</h3>
+<p style="color: #ffa500; margin-bottom: 15px;">
+Very high impact (5.3/6) but only 6% mentioned
+</p>
 <ul class="risk-list">
 <li>Labor shortage for skilled positions</li>
 <li>Low retention due to lack of talent development</li>
@@ -630,15 +781,15 @@ Risk Score = Probability × Impact (Max: 36)
 </ul>
 <div class="risk-metrics">
 <div class="metric">
-<div class="metric-label">Probability</div>
-<div class="metric-value">3.3/6</div>
+<div class="metric-label">Base Severity</div>
+<div class="metric-value">17.5</div>
 </div>
 <div class="metric">
-<div class="metric-label">Impact</div>
-<div class="metric-value">5.3/6</div>
+<div class="metric-label">Mention Boost</div>
+<div class="metric-value">+6%</div>
 </div>
 <div class="metric">
-<div class="metric-label">Risks</div>
+<div class="metric-label">Total Risks</div>
 <div class="metric-value">3</div>
 </div>
 </div>
@@ -683,295 +834,82 @@ Risk Score = Probability × Impact (Max: 36)
 </div>
 </div>
 
-<!-- Market & Customer Risks -->
-<div class="slide" data-slide="4">
-<h1>Market & Customer Risks</h1>
-<span class="risk-score">Risk Score: 17.1</span>
-<div class="risk-grid">
-<div class="risk-card high-risk">
-<h3>Primary Risks (8 total)</h3>
-<ul class="risk-list">
-<li>Quality misalignment with market expectations</li>
-<li>Continued emergence of low-cost competition</li>
-<li>Loss of existing business faster than new acquisition</li>
-<li>Competitive disadvantages (cost, lead time, quality)</li>
-</ul>
-<div class="risk-metrics">
-<div class="metric">
-<div class="metric-label">Probability</div>
-<div class="metric-value">3.5/6</div>
+<!-- Top 10 Critical Risks -->
+<div class="slide" data-slide="6">
+<h1>Top Risk Categories - Balanced Scoring</h1>
+<p style="text-align: center; font-size: 18px; margin-bottom: 20px;">
+Combining severity with organizational awareness (frequency of mentions)
+</p>
+<div style="background: rgba(0,0,0,0.5); padding: 30px; border-radius: 20px; margin: 20px auto; max-width: 900px;">
+<table style="width: 100%; color: white; font-size: 16px; border-collapse: collapse;">
+<thead>
+<tr style="border-bottom: 2px solid #ffd700;">
+<th style="padding: 10px; text-align: left;">Rank</th>
+<th style="padding: 10px; text-align: left;">Category</th>
+<th style="padding: 10px; text-align: center;">Balanced Score</th>
+<th style="padding: 10px; text-align: center;">Base Severity</th>
+<th style="padding: 10px; text-align: center;">Mentions</th>
+<th style="padding: 10px; text-align: center;">Calculation</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-bottom: 1px solid #444;">
+<td style="padding: 10px;">1</td>
+<td style="padding: 10px; font-weight: bold; color: #ff4444;">Technology & Systems</td>
+<td style="padding: 10px; text-align: center; font-weight: bold;">23.1</td>
+<td style="padding: 10px; text-align: center;">17.0</td>
+<td style="padding: 10px; text-align: center;">17 (36%)</td>
+<td style="padding: 10px; text-align: center;">17.0 × 1.36</td>
+</tr>
+<tr style="border-bottom: 1px solid #444;">
+<td style="padding: 10px;">2</td>
+<td style="padding: 10px; font-weight: bold; color: #ffa500;">Market & Customer</td>
+<td style="padding: 10px; text-align: center; font-weight: bold;">20.1</td>
+<td style="padding: 10px; text-align: center;">17.2</td>
+<td style="padding: 10px; text-align: center;">8 (17%)</td>
+<td style="padding: 10px; text-align: center;">17.2 × 1.17</td>
+</tr>
+<tr style="border-bottom: 1px solid #444;">
+<td style="padding: 10px;">3</td>
+<td style="padding: 10px; font-weight: bold; color: #ffd700;">Strategic & Growth</td>
+<td style="padding: 10px; text-align: center; font-weight: bold;">19.7</td>
+<td style="padding: 10px; text-align: center;">18.5</td>
+<td style="padding: 10px; text-align: center;">3 (6%)</td>
+<td style="padding: 10px; text-align: center;">18.5 × 1.06</td>
+</tr>
+<tr style="border-bottom: 1px solid #444;">
+<td style="padding: 10px;">4</td>
+<td style="padding: 10px; font-weight: bold; color: #00ff88;">Talent & Workforce</td>
+<td style="padding: 10px; text-align: center; font-weight: bold;">18.6</td>
+<td style="padding: 10px; text-align: center;">17.5</td>
+<td style="padding: 10px; text-align: center;">3 (6%)</td>
+<td style="padding: 10px; text-align: center;">17.5 × 1.06</td>
+</tr>
+<tr style="border-bottom: 1px solid #444;">
+<td style="padding: 10px;">5</td>
+<td style="padding: 10px;">Supply Chain</td>
+<td style="padding: 10px; text-align: center;">18.2</td>
+<td style="padding: 10px; text-align: center;">15.8</td>
+<td style="padding: 10px; text-align: center;">7 (15%)</td>
+<td style="padding: 10px; text-align: center;">15.8 × 1.15</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="metric">
-<div class="metric-label">Impact</div>
-<div class="metric-value">4.9/6</div>
-</div>
-</div>
-</div>
+<div class="risk-grid" style="margin-top: 30px;">
 <div class="risk-card">
-<h3>Affected Areas</h3>
-<p>Sales, Operations, Finance - particularly:</p>
-<ul class="risk-list">
-<li>Lewiston facility (high vulnerability)</li>
-<li>Euclid operations</li>
-<li>Fixed cost impacts to margins</li>
-</ul>
-</div>
-<div class="risk-card">
-<h3>Elimination Strategies</h3>
-<ul class="risk-list">
-<li>Quality improvement initiatives</li>
-<li>Cost reduction programs</li>
-<li>Market differentiation strategy</li>
-<li>Value engineering projects</li>
-</ul>
-</div>
-<div class="risk-card">
-<h3>Mitigation Strategies</h3>
-<ul class="risk-list">
-<li>Customer feedback loops</li>
-<li>Competitive analysis programs</li>
-<li>Agile market response</li>
-<li>Pricing optimization</li>
-</ul>
-</div>
-</div>
-</div>
-
-<!-- Technology & Systems Risks -->
-<div class="slide" data-slide="5">
-<h1>Technology & Systems Risks</h1>
-<span class="risk-score">Risk Score: 16.8 | 17 Risks Identified</span>
-<div class="risk-grid">
-<div class="risk-card high-risk">
-<h3>Critical Technology Risks</h3>
-<ul class="risk-list">
-<li>Cybersecurity vulnerabilities</li>
-<li>Legacy system failures</li>
-<li>Technology adoption lag</li>
-<li>Data integrity issues</li>
-</ul>
-<p style="margin-top: 15px; color: #ff6666;">
-<strong>Most Vulnerable:</strong> Euclid facility
+<h3>Key Insight</h3>
+<p style="line-height: 1.8;">
+<strong>Technology & Systems</strong> jumped to #1 priority because 36% of all risk mentions were technology-related,
+showing widespread organizational concern despite slightly lower base severity than Strategic risks.
 </p>
 </div>
 <div class="risk-card">
-<h3>Risk Impact Analysis</h3>
-<div class="risk-metrics">
-<div class="metric">
-<div class="metric-label">Probability</div>
-<div class="metric-value">3.4/6</div>
-</div>
-<div class="metric">
-<div class="metric-label">Impact</div>
-<div class="metric-value">5.0/6</div>
-</div>
-</div>
-<p style="margin-top: 15px;">Potential to disable most business operations</p>
-</div>
-<div class="strategy-section">
-<div class="strategy-type">🛡️ ELIMINATE</div>
-<ul class="risk-list">
-<li>Comprehensive IT modernization</li>
-<li>Cybersecurity infrastructure upgrades</li>
-<li>Legacy system replacement</li>
-</ul>
-</div>
-<div class="strategy-section">
-<div class="strategy-type">⚡ MITIGATE</div>
-<ul class="risk-list">
-<li>Regular security audits</li>
-<li>Backup systems implementation</li>
-<li>Phased technology adoption</li>
-</ul>
-</div>
-<div class="strategy-section">
-<div class="strategy-type">🚨 RESCUE</div>
-<ul class="risk-list">
-<li>Incident response plans</li>
-<li>Disaster recovery protocols</li>
-<li>Cyber insurance coverage</li>
-</ul>
-</div>
-</div>
-</div>
-
-<!-- Top 10 Critical Risks -->
-<div class="slide" data-slide="6">
-<h1>Top 10 Critical Individual Risks</h1>
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-<div>
-<div class="risk-card critical-risk" style="margin-bottom: 15px;">
-<h3>1. Major Equipment Failure</h3>
-<div class="risk-metrics">
-<div class="metric">
-<div class="metric-label">Score</div>
-<div class="metric-value">30</div>
-</div>
-<div class="metric">
-<div class="metric-label">Prob</div>
-<div class="metric-value">5/6</div>
-</div>
-<div class="metric">
-<div class="metric-label">Impact</div>
-<div class="metric-value">6/6</div>
-</div>
-</div>
-</div>
-<div class="risk-card critical-risk" style="margin-bottom: 15px;">
-<h3>2. Quality Not Aligned with Market</h3>
-<div class="risk-metrics">
-<div class="metric">
-<div class="metric-label">Score</div>
-<div class="metric-value">30</div>
-</div>
-<div class="metric">
-<div class="metric-label">Prob</div>
-<div class="metric-value">5/6</div>
-</div>
-<div class="metric">
-<div class="metric-label">Impact</div>
-<div class="metric-value">6/6</div>
-</div>
-</div>
-</div>
-<div class="risk-card critical-risk" style="margin-bottom: 15px;">
-<h3>3. Material Source and Pricing</h3>
-<div class="risk-metrics">
-<div class="metric">
-<div class="metric-label">Score</div>
-<div class="metric-value">25</div>
-</div>
-<div class="metric">
-<div class="metric-label">Prob</div>
-<div class="metric-value">5/6</div>
-</div>
-<div class="metric">
-<div class="metric-label">Impact</div>
-<div class="metric-value">5/6</div>
-</div>
-</div>
-</div>
-<div class="risk-card critical-risk" style="margin-bottom: 15px;">
-<h3>4. Emergence of LCR Competition</h3>
-<div class="risk-metrics">
-<div class="metric">
-<div class="metric-label">Score</div>
-<div class="metric-value">25</div>
-</div>
-<div class="metric">
-<div class="metric-label">Prob</div>
-<div class="metric-value">5/6</div>
-</div>
-<div class="metric">
-<div class="metric-label">Impact</div>
-<div class="metric-value">5/6</div>
-</div>
-</div>
-</div>
-<div class="risk-card critical-risk" style="margin-bottom: 15px;">
-<h3>5. Business Loss > New Acquisition</h3>
-<div class="risk-metrics">
-<div class="metric">
-<div class="metric-label">Score</div>
-<div class="metric-value">24</div>
-</div>
-<div class="metric">
-<div class="metric-label">Prob</div>
-<div class="metric-value">4/6</div>
-</div>
-<div class="metric">
-<div class="metric-label">Impact</div>
-<div class="metric-value">6/6</div>
-</div>
-</div>
-</div>
-</div>
-<div>
-<div class="risk-card high-risk" style="margin-bottom: 15px;">
-<h3>6. Talent Development/Retention</h3>
-<div class="risk-metrics">
-<div class="metric">
-<div class="metric-label">Score</div>
-<div class="metric-value">24</div>
-</div>
-<div class="metric">
-<div class="metric-label">Prob</div>
-<div class="metric-value">4/6</div>
-</div>
-<div class="metric">
-<div class="metric-label">Impact</div>
-<div class="metric-value">6/6</div>
-</div>
-</div>
-</div>
-<div class="risk-card high-risk" style="margin-bottom: 15px;">
-<h3>7. Sales Erosion vs Growth</h3>
-<div class="risk-metrics">
-<div class="metric">
-<div class="metric-label">Score</div>
-<div class="metric-value">20</div>
-</div>
-<div class="metric">
-<div class="metric-label">Prob</div>
-<div class="metric-value">4/6</div>
-</div>
-<div class="metric">
-<div class="metric-label">Impact</div>
-<div class="metric-value">5/6</div>
-</div>
-</div>
-</div>
-<div class="risk-card high-risk" style="margin-bottom: 15px;">
-<h3>8. Competitive Disadvantages</h3>
-<div class="risk-metrics">
-<div class="metric">
-<div class="metric-label">Score</div>
-<div class="metric-value">20</div>
-</div>
-<div class="metric">
-<div class="metric-label">Prob</div>
-<div class="metric-value">4/6</div>
-</div>
-<div class="metric">
-<div class="metric-label">Impact</div>
-<div class="metric-value">5/6</div>
-</div>
-</div>
-</div>
-<div class="risk-card high-risk" style="margin-bottom: 15px;">
-<h3>9. Lack of Market Aggressiveness</h3>
-<div class="risk-metrics">
-<div class="metric">
-<div class="metric-label">Score</div>
-<div class="metric-value">20</div>
-</div>
-<div class="metric">
-<div class="metric-label">Prob</div>
-<div class="metric-value">4/6</div>
-</div>
-<div class="metric">
-<div class="metric-label">Impact</div>
-<div class="metric-value">5/6</div>
-</div>
-</div>
-</div>
-<div class="risk-card high-risk" style="margin-bottom: 15px;">
-<h3>10. Labor Shortage - Skilled Positions</h3>
-<div class="risk-metrics">
-<div class="metric">
-<div class="metric-label">Score</div>
-<div class="metric-value">20</div>
-</div>
-<div class="metric">
-<div class="metric-label">Prob</div>
-<div class="metric-value">4/6</div>
-</div>
-<div class="metric">
-<div class="metric-label">Impact</div>
-<div class="metric-value">5/6</div>
-</div>
-</div>
-</div>
+<h3>What This Means</h3>
+<p style="line-height: 1.8;">
+Risks with high frequency of mentions indicate broader organizational awareness and impact.
+The balanced score better reflects both risk severity AND how many people/areas see it as a concern.
+</p>
 </div>
 </div>
 </div>
